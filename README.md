@@ -43,7 +43,13 @@ Benchmarks use Google Benchmark and are built from the normal `build` directory,
 so IDE tooling can keep using the same `compile_commands.json`:
 
 ```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DLOGHTNING_BUILD_BENCHMARKS=ON
-cmake --build build --target loghtning_benchmarks
-./build/loghtning_benchmarks --benchmark_min_time=0.1s
+scripts/run_benchmarks.sh
+```
+
+The script defaults to 1 repetition. Pass a number or `--repetitions` to
+override it, followed by any Google Benchmark arguments:
+
+```sh
+scripts/run_benchmarks.sh 10 --benchmark_filter=BM_Format
+scripts/run_benchmarks.sh --repetitions 3 --benchmark_min_time=0.2s
 ```
