@@ -36,3 +36,14 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ctest --test-dir build --output-on-failure
 ```
+
+## Benchmarks
+
+Benchmarks use Google Benchmark and are built from the normal `build` directory,
+so IDE tooling can keep using the same `compile_commands.json`:
+
+```sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DLOGHTNING_BUILD_BENCHMARKS=ON
+cmake --build build --target loghtning_benchmarks
+./build/loghtning_benchmarks --benchmark_min_time=0.1s
+```

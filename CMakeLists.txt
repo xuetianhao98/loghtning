@@ -6,6 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(LOGHTNING_BUILD_EXAMPLES "Build loghtning examples" ON)
 option(LOGHTNING_BUILD_TESTS "Build loghtning tests" ON)
+option(LOGHTNING_BUILD_BENCHMARKS "Build loghtning benchmarks" ON)
 
 add_library(loghtning
   src/loghtning.cpp
@@ -53,4 +54,28 @@ if(LOGHTNING_BUILD_TESTS)
   target_link_libraries(loghtning_tests PRIVATE loghtning::loghtning GTest::gtest_main)
 
   gtest_discover_tests(loghtning_tests)
+endif()
+
+if(LOGHTNING_BUILD_BENCHMARKS)
+  find_package(benchmark QUIET)
+  if(NOT benchmark_FOUND)
+    include(FetchContent)
+    set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+    set(BENCHMARK_ENABLE_INSTALL OFF CACHE BOOL "" FORCE)
+    set(BENCHMARK_DOWNLOAD_DEPENDENCIES OFF CACHE BOOL "" FORCE)
+    FetchContent_Declare(
+      googlebenchmark
+      URL https://github.com/google/benchmark/archive/refs/tags/v1.9.5.zip
+      DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+    FetchContent_MakeAvailable(googlebenchmark)
+  endif()
+
+  add_executable(loghtning_benchmarks benchmarks/loghtning_benchmarks.cpp)
+  target_link_libraries(
+    loghtning_benchmarks
+    PRIVATE
+      loghtning::loghtning
+      benchmark::benchmark_main
+  )
 endif()
